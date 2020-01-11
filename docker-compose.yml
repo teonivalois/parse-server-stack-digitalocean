@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  db:
+    image: mongo:3.4
+    container_name: parse_mongo
+    
+  redis:
+    image: redis:5.0
+    container_name: parse_redis
+
+  parse_server:
+    image: parseplatform/parse-server:3.9.0
+    container_name: parse_server
+    volumes:
+      - type: bind
+        source: ./custom_adapters/
+        target: /parse-server/lib/Adapters/Custom/
+    env_file:
+      - ./parse-server.env
+    ports:
+      - 80:1337
+
+  parse_dashboard:
+    image: parseplatform/parse-dashboard:2.0.5
+    container_name: parse_dashboard
+    env_file:
+      - ./parse-dashboard.env
+    ports:
+      - 8080:4040
